@@ -22,7 +22,7 @@ class AuthController
     {
         Security::startSession();
         if (!empty($_SESSION['user_id'])) {
-            Response::redirect('/shieldlayer/public/dashboard');
+            Response::redirect('/dashboard');
         }
         View::render('auth/login', [
             'title' => 'ShieldLayer — Sign In',
@@ -41,19 +41,19 @@ class AuthController
 
         $result = $this->authService->login($email, $password);
         if ($result['success']) {
-            Response::redirect('/shieldlayer/public/dashboard');
+            Response::redirect('/dashboard');
         }
 
         Security::startSession();
         $_SESSION['flash_error'] = $result['message'];
-        Response::redirect('/shieldlayer/public/login');
+        Response::redirect('/login');
     }
 
     public function showRegister(Request $request): void
     {
         Security::startSession();
         if (!empty($_SESSION['user_id'])) {
-            Response::redirect('/shieldlayer/public/dashboard');
+            Response::redirect('/dashboard');
         }
         View::render('auth/register', [
             'title' => 'ShieldLayer — Create Account',
@@ -75,16 +75,16 @@ class AuthController
 
         if ($result['success']) {
             $_SESSION['flash_success'] = 'Account registered successfully. You may now sign in.';
-            Response::redirect('/shieldlayer/public/login');
+            Response::redirect('/login');
         }
 
         $_SESSION['flash_error'] = $result['message'];
-        Response::redirect('/shieldlayer/public/register');
+        Response::redirect('/register');
     }
 
     public function logout(Request $request): void
     {
         $this->authService->logout();
-        Response::redirect('/shieldlayer/public/login');
+        Response::redirect('/login');
     }
 }

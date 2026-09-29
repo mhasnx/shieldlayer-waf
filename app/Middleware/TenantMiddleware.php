@@ -15,7 +15,7 @@ class TenantMiddleware
 
         $userId = $_SESSION['user_id'] ?? null;
         if (!$userId) {
-            Response::redirect('/shieldlayer/public/login');
+            Response::redirect('/login');
         }
 
         $activeTenantId = $_SESSION['active_tenant_id'] ?? null;

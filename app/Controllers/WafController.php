@@ -28,7 +28,7 @@ class WafController
 
         $tenantId = TenantContext::getTenantId();
         if (!$tenantId) {
-            Response::redirect('/shieldlayer/public/dashboard');
+            Response::redirect('/dashboard');
         }
 
         $ruleType = $request->input('rule_type', 'ip_block');
@@ -42,7 +42,7 @@ class WafController
             $_SESSION['flash_error'] = 'Rule pattern/value cannot be empty.';
         }
 
-        Response::redirect('/shieldlayer/public/dashboard');
+        Response::redirect('/dashboard');
     }
 
     public function delete(Request $request): void
@@ -58,6 +58,6 @@ class WafController
             $_SESSION['flash_success'] = 'WAF Rule deleted.';
         }
 
-        Response::redirect('/shieldlayer/public/dashboard');
+        Response::redirect('/dashboard');
     }
 }

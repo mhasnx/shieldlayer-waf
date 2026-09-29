@@ -36,7 +36,7 @@ class TenantController
             $_SESSION['flash_error'] = $result['message'];
         }
 
-        Response::redirect('/shieldlayer/public/dashboard');
+        Response::redirect('/dashboard');
     }
 
     public function switchTenant(Request $request): void
@@ -63,6 +63,6 @@ class TenantController
             $_SESSION['flash_error'] = 'Unauthorized tenant scope switch.';
         }
 
-        Response::redirect('/shieldlayer/public/dashboard');
+        Response::redirect('/dashboard');
     }
 }

@@ -16,7 +16,7 @@ class RoleMiddleware
         $tenantId = TenantContext::getTenantId();
 
         if (!$userId || !$tenantId) {
-            Response::redirect('/shieldlayer/public/login');
+            Response::redirect('/login');
         }
 
         $tenantRepo = new TenantRepository();

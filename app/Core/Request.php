@@ -16,7 +16,7 @@ class Request
         $rawUri = $_SERVER['REQUEST_URI'] ?? '/';
         $parsedUrl = parse_url($rawUri, PHP_URL_PATH);
         
-        // Strip project path prefix if running in subdirectory like /shieldlayer/public
+        // Strip project path prefix if running in subdirectory like 
         $scriptDir = dirname($_SERVER['SCRIPT_NAME'] ?? '');
         $scriptDir = str_replace('\\', '/', $scriptDir);
         if ($scriptDir !== '/' && !empty($scriptDir) && str_starts_with($parsedUrl, $scriptDir)) {

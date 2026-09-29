@@ -46,14 +46,14 @@
 </head>
 <body>
     <nav>
-        <a href="/shieldlayer/public/" class="logo">🛡️ ShieldLayer</a>
+        <a href="/" class="logo">🛡️ ShieldLayer</a>
         <div class="nav-links">
             <?php if (!empty($_SESSION['user_id'])): ?>
-                <a href="/shieldlayer/public/dashboard">Dashboard</a>
-                <a href="/shieldlayer/public/logout">Logout</a>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/logout">Logout</a>
             <?php else: ?>
-                <a href="/shieldlayer/public/login">Sign In</a>
-                <a href="/shieldlayer/public/register">Register</a>
+                <a href="/login">Sign In</a>
+                <a href="/register">Register</a>
             <?php endif; ?>
         </div>
     </nav>

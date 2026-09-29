@@ -5,7 +5,7 @@
         <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
 
-    <form method="POST" action="/shieldlayer/public/register">
+    <form method="POST" action="/register">
         <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
 
         <div class="form-group">
@@ -27,6 +27,6 @@
     </form>
 
     <div class="form-footer">
-        Existing operator? <a href="/shieldlayer/public/login">Sign in</a>
+        Existing operator? <a href="/login">Sign in</a>
     </div>
 </div>

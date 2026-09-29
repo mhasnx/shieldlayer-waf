@@ -9,7 +9,7 @@
         <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
     <?php endif; ?>
 
-    <form method="POST" action="/shieldlayer/public/login">
+    <form method="POST" action="/login">
         <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
 
         <div class="form-group">
@@ -26,6 +26,6 @@
     </form>
 
     <div class="form-footer">
-        Need an account? <a href="/shieldlayer/public/register">Create one</a>
+        Need an account? <a href="/register">Create one</a>
     </div>
 </div>

@@ -11,7 +11,7 @@ class AuthMiddleware
     {
         Security::startSession();
         if (empty($_SESSION['user_id'])) {
-            Response::redirect('/shieldlayer/public/login');
+            Response::redirect('/login');
         }
     }
 }

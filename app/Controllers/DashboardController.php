@@ -85,7 +85,7 @@ class DashboardController
 
         $currentTenant = TenantContext::getTenant();
         if (!$currentTenant) {
-            Response::redirect('/shieldlayer/public/dashboard');
+            Response::redirect('/dashboard');
         }
 
         $eventRepo = new SecurityEventRepository();

@@ -22,12 +22,12 @@
         </div>
 
         <div style="display: flex; gap: 1rem; align-items: center;">
-            <a href="/shieldlayer/public/dashboard/export" class="btn" style="text-decoration: none; padding: 0.5rem 0.9rem; font-size: 0.85rem; background: #374151; display: inline-flex; align-items: center; gap: 0.35rem;">
+            <a href="/dashboard/export" class="btn" style="text-decoration: none; padding: 0.5rem 0.9rem; font-size: 0.85rem; background: #374151; display: inline-flex; align-items: center; gap: 0.35rem;">
                 📥 Export CSV
             </a>
 
             <?php if (!empty($user_tenants) && count($user_tenants) > 1): ?>
-                <form method="GET" action="/shieldlayer/public/tenant/switch" style="display: flex; align-items: center; gap: 0.5rem;">
+                <form method="GET" action="/tenant/switch" style="display: flex; align-items: center; gap: 0.5rem;">
                     <select name="tenant_id" onchange="this.form.submit()" style="background: #0b0f19; border: 1px solid var(--border-color); color: var(--text-main); padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.9rem; outline: none;">
                         <?php foreach ($user_tenants as $t): ?>
                             <option value="<?= htmlspecialchars($t['id']) ?>" <?= (!empty($current_tenant['id']) && $current_tenant['id'] === $t['id']) ? 'selected' : '' ?>>
@@ -133,7 +133,7 @@
         <h3 style="font-size: 1.1rem; color: #38bdf8; margin-bottom: 1rem;">Tenant Firewall Policy & IP Blacklist</h3>
         
         <?php if ($tenant_role === 'owner' || $tenant_role === 'analyst'): ?>
-            <form method="POST" action="/shieldlayer/public/waf/rule/create" style="display: flex; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
+            <form method="POST" action="/waf/rule/create" style="display: flex; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
                 <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
                 
                 <div style="flex: 1; min-width: 140px;">
@@ -170,7 +170,7 @@
                             <td style="padding: 0.6rem;"><span style="color: #ef4444; font-weight: 600; text-transform: uppercase;"><?= htmlspecialchars($r['action']) ?></span></td>
                             <?php if ($tenant_role === 'owner' || $tenant_role === 'analyst'): ?>
                                 <td style="padding: 0.6rem; text-align: right;">
-                                    <a href="/shieldlayer/public/waf/rule/delete?id=<?= urlencode($r['id']) ?>" style="color: #f87171; text-decoration: none; font-size: 0.8rem;" onclick="return confirm('Revoke this firewall rule?');">Revoke</a>
+                                    <a href="/waf/rule/delete?id=<?= urlencode($r['id']) ?>" style="color: #f87171; text-decoration: none; font-size: 0.8rem;" onclick="return confirm('Revoke this firewall rule?');">Revoke</a>
                                 </td>
                             <?php endif; ?>
                         </tr>
@@ -187,7 +187,7 @@
         <h3 style="font-size: 1.1rem; color: #38bdf8; margin-bottom: 1rem;">Organization Operators & RBAC</h3>
 
         <?php if ($tenant_role === 'owner'): ?>
-            <form method="POST" action="/shieldlayer/public/team/invite" style="display: flex; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
+            <form method="POST" action="/team/invite" style="display: flex; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
                 <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
 
                 <div style="flex: 2; min-width: 200px;">
@@ -230,7 +230,7 @@
                         <?php if ($tenant_role === 'owner'): ?>
                             <td style="padding: 0.6rem; text-align: right;">
                                 <?php if ($m['email'] !== $user_email): ?>
-                                    <a href="/shieldlayer/public/team/remove?user_id=<?= urlencode($m['id']) ?>" style="color: #f87171; text-decoration: none; font-size: 0.8rem;" onclick="return confirm('Revoke operator access?');">Revoke</a>
+                                    <a href="/team/remove?user_id=<?= urlencode($m['id']) ?>" style="color: #f87171; text-decoration: none; font-size: 0.8rem;" onclick="return confirm('Revoke operator access?');">Revoke</a>
                                 <?php else: ?>
                                     <span style="color: var(--text-muted); font-size: 0.8rem;">Current</span>
                                 <?php endif; ?>
@@ -255,7 +255,7 @@
 
         <div class="card" style="max-width: none;">
             <h3 style="font-size: 1.1rem; color: #38bdf8; margin-bottom: 1rem;">Provision Tenant</h3>
-            <form method="POST" action="/shieldlayer/public/tenant/create">
+            <form method="POST" action="/tenant/create">
                 <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
                 <div class="form-group" style="margin-bottom: 1rem;">
                     <label for="org_name">Organization Name</label>
