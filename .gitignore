@@ -1,0 +1,20 @@
+﻿# Environment & Secrets
+.env
+.env.backup
+.env.production
+
+# Dependencies
+/vendor/
+
+# Storage & Temporary Files
+/storage/logs/*.log
+/storage/cache/*
+/storage/uploads/*
+
+# OS Specific
+Thumbs.db
+.DS_Store
+
+# IDE Specific
+.vscode/
+.idea/

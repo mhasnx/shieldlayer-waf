@@ -1,0 +1,14 @@
+{
+    "name": "shieldlayer/shieldlayer",
+    "description": "Production-grade SaaS cybersecurity platform",
+    "type": "project",
+    "require": {
+        "php": ">=8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ShieldLayer\\": "app/"
+        }
+    },
+    "minimum-stability": "stable"
+}
