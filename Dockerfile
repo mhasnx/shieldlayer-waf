@@ -12,6 +12,8 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 COPY . /var/www/html/
 WORKDIR /var/www/html
 
-# Storage permissions
-RUN chown -R www-data:www-data /var/www/html/storage
+# Ensure storage directory exists and assign permissions
+RUN mkdir -p /var/www/html/storage/logs \
+    && chown -R www-data:www-data /var/www/html/storage
+
 EXPOSE 80
