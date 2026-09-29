@@ -18,3 +18,8 @@ Thumbs.db
 # IDE Specific
 .vscode/
 .idea/
+
+.env
+vendor/
+storage/logs/*
+!storage/logs/.gitkeep
