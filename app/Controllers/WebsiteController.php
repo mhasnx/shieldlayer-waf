@@ -2,6 +2,8 @@
 
 namespace ShieldLayer\Controllers;
 
+use ShieldLayer\Services\SecurityScannerService;
+
 use ShieldLayer\Core\Request;
 use ShieldLayer\Core\Response;
 use ShieldLayer\Repositories\WebsiteRepository;
@@ -96,6 +98,31 @@ class WebsiteController
             $_SESSION['flash_success'] = "Ownership verified for {$domain}! Website is now Protection Ready.";
         } else {
             $_SESSION['flash_error'] = "Ownership check failed for {$domain}. Make sure the DNS TXT record or verification file is accessible.";
+        }
+
+        Response::redirect('/dashboard');
+    }
+
+    public function triggerScan(Request $request): void
+    {
+        CsrfMiddleware::handle($request);
+        Security::startSession();
+
+        $id = $request->input('website_id', '');
+        $site = $this->websiteRepo->findById($id);
+
+        if (!$site) {
+            $_SESSION['flash_error'] = 'Website not found for scan.';
+            Response::redirect('/dashboard');
+        }
+
+        $scanner = new SecurityScannerService();
+        $result = $scanner->scan($site['id'], $site['domain'], $site['origin_url']);
+
+        if ($result['success']) {
+            $_SESSION['flash_success'] = "Scan completed for {$site['domain']}! Security Score: {$result['score']}/100.";
+        } else {
+            $_SESSION['flash_error'] = "Scan failed: " . ($result['error'] ?? 'Unknown error');
         }
 
         Response::redirect('/dashboard');

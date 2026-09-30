@@ -79,5 +79,6 @@ $router->get('/team/remove', [TeamController::class, 'remove']);
 // Website Management & Verification Routes
 $router->post('/website/create', [WebsiteController::class, 'store']);
 $router->post('/website/verify', [WebsiteController::class, 'verify']);
+$router->post('/website/scan', [WebsiteController::class, 'triggerScan']);
 
 $router->dispatch($request);
