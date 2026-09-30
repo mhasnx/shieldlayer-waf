@@ -37,14 +37,14 @@
     <!-- Scope Header -->
     <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         <div>
-            <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Current Tenant Scope</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Current Organization Scope</div>
             <div style="font-size: 1.3rem; font-weight: 700; color: #38bdf8;">
                 <?= htmlspecialchars($current_tenant['name'] ?? 'No Organization Selected') ?>
             </div>
             <?php if (!empty($current_tenant['slug'])): ?>
                 <div style="font-size: 0.8rem; color: var(--text-muted); font-family: monospace;">
                     Slug: <?= htmlspecialchars($current_tenant['slug']) ?> | Plan: <?= strtoupper(htmlspecialchars($current_tenant['plan'])) ?> | 
-                    <span style="color: #34d399; font-weight: 600;">Your Role: <?= strtoupper(htmlspecialchars($tenant_role)) ?></span>
+                    <span style="color: #34d399; font-weight: 600;">Your Access Level: <?= strtoupper(htmlspecialchars($tenant_role)) ?></span>
                 </div>
             <?php endif; ?>
         </div>
@@ -210,9 +210,9 @@
         <?php endif; ?>
     </div>
 
-    <!-- Team Access Control (RBAC) Section -->
+    <!-- Team Access Control (Access Control) Section -->
     <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
-        <h3 style="font-size: 1.1rem; color: #38bdf8; margin-bottom: 1rem;">Organization Operators & RBAC</h3>
+        <h3 style="font-size: 1.1rem; color: #38bdf8; margin-bottom: 1rem;">Team Members & Access</h3>
 
         <?php if ($tenant_role === 'owner'): ?>
             <form method="POST" action="/team/invite" style="display: flex; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
@@ -230,7 +230,7 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn" style="flex: 1; min-width: 130px; padding: 0.65rem;">Assign Seat</button>
+                <button type="submit" class="btn" style="flex: 1; min-width: 130px; padding: 0.65rem;">Add Team Member</button>
             </form>
         <?php endif; ?>
 
@@ -239,7 +239,7 @@
                 <tr style="border-bottom: 1px solid var(--border-color); text-align: left; color: var(--text-muted);">
                     <th style="padding: 0.6rem;">Operator</th>
                     <th style="padding: 0.6rem;">Email</th>
-                    <th style="padding: 0.6rem;">Role</th>
+                    <th style="padding: 0.6rem;">Access Level</th>
                     <?php if ($tenant_role === 'owner'): ?>
                         <th style="padding: 0.6rem; text-align: right;">Action</th>
                     <?php endif; ?>
@@ -273,16 +273,16 @@
     <!-- Identity & Provisioning Row -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
         <div class="card" style="max-width: none;">
-            <h3 style="font-size: 1.1rem; color: #38bdf8; margin-bottom: 1rem;">Operator Context</h3>
+            <h3 style="font-size: 1.1rem; color: #38bdf8; margin-bottom: 1rem;">Your Account Profile</h3>
             <p style="font-size: 1.1rem; font-weight: 600;"><?= htmlspecialchars($user_name) ?></p>
             <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;"><?= htmlspecialchars($user_email) ?></p>
             <div style="margin-top: 1rem; display: inline-block; background: rgba(56, 189, 248, 0.15); border: 1px solid #0284c7; padding: 0.25rem 0.65rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #38bdf8;">
-                Role: <?= htmlspecialchars($user_role) ?>
+                Access Level: <?= htmlspecialchars($user_role) ?>
             </div>
         </div>
 
         <div class="card" style="max-width: none;">
-            <h3 style="font-size: 1.1rem; color: #38bdf8; margin-bottom: 1rem;">Provision Tenant</h3>
+            <h3 style="font-size: 1.1rem; color: #38bdf8; margin-bottom: 1rem;">Create an Organization</h3>
             <form method="POST" action="/tenant/create">
                 <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
                 <div class="form-group" style="margin-bottom: 1rem;">
