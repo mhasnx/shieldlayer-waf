@@ -156,9 +156,9 @@
         <?php endif; ?>
     </div>
 
-    <!-- Tenant Firewall Policy & IP Blacklist -->
+    <!-- Traffic Protection & Access Rules -->
     <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
-        <h3 style="font-size: 1.1rem; color: #38bdf8; margin-bottom: 1rem;">Tenant Firewall Policy & IP Blacklist</h3>
+        <h3 style="font-size: 1.1rem; color: #38bdf8; margin-bottom: 1rem;">Traffic Protection & Access Rules</h3>
         
         <?php if ($tenant_role === 'owner' || $tenant_role === 'analyst'): ?>
             <form method="POST" action="/waf/rule/create" style="display: flex; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
@@ -174,7 +174,7 @@
                     <input type="text" name="pattern" placeholder="e.g. 192.168.1.100 or ::1" required style="width: 100%; background: #0b0f19; border: 1px solid var(--border-color); color: var(--text-main); padding: 0.65rem 1rem; border-radius: 6px; outline: none;">
                 </div>
 
-                <button type="submit" class="btn" style="flex: 1; min-width: 140px; padding: 0.65rem;">Deploy Rule</button>
+                <button type="submit" class="btn" style="flex: 1; min-width: 140px; padding: 0.65rem;">Add Rule</button>
             </form>
         <?php endif; ?>
 
