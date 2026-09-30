@@ -12,6 +12,7 @@ use ShieldLayer\Services\TenantService;
 use ShieldLayer\Services\SystemHealthService;
 use ShieldLayer\Repositories\TenantRepository;
 use ShieldLayer\Repositories\SecurityEventRepository;
+use ShieldLayer\Repositories\WebsiteRepository;
 use ShieldLayer\Repositories\WafRuleRepository;
 use ShieldLayer\Support\Security;
 

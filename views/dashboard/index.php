@@ -1,4 +1,66 @@
 <!-- Live Status & Security Score Header -->
+<!-- Websites & Ownership Verification Section (Mobile Responsive) -->
+<div style="background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid #1e293b; padding-bottom: 1rem; margin-bottom: 1.25rem;">
+        <div>
+            <h3 style="margin: 0; font-size: 1.2rem; color: #f8fafc; font-weight: 700;">Protected Websites</h3>
+            <p style="margin: 0.25rem 0 0 0; color: #94a3b8; font-size: 0.85rem;">Add your web domain to enable continuous security analysis and traffic protection.</p>
+        </div>
+        <form method="POST" action="/website/create" style="display: flex; gap: 0.5rem; flex-wrap: wrap; width: 100%; max-width: 480px;">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
+            <input type="url" name="url" placeholder="https://yourdomain.com" required style="flex: 1; min-width: 200px; padding: 0.65rem 0.85rem; background: #0b0f19; border: 1px solid #334155; border-radius: 6px; color: #f8fafc; font-size: 0.85rem; outline: none;">
+            <button type="submit" style="padding: 0.65rem 1.25rem; background: #2563eb; color: #ffffff; border: none; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap;">+ Add Website</button>
+        </form>
+    </div>
+
+    <?php if (empty($websites)): ?>
+        <div style="text-align: center; padding: 2.5rem 1rem; color: #64748b; background: #0b0f19; border-radius: 8px; border: 1px dashed #1e293b;">
+            <p style="margin: 0 0 0.5rem 0; font-size: 1rem; color: #94a3b8; font-weight: 500;">No websites connected yet.</p>
+            <span style="font-size: 0.8rem;">Enter your website URL above to begin ownership verification and security monitoring.</span>
+        </div>
+    <?php else: ?>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem;">
+            <?php foreach ($websites as $site): ?>
+                <div style="background: #0b0f19; border: 1px solid #1e293b; border-radius: 8px; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <span style="font-weight: 700; color: #38bdf8; font-size: 1.05rem; word-break: break-all;"><?= htmlspecialchars($site['domain']) ?></span>
+                            <?php if ($site['status'] === 'PROTECTED'): ?>
+                                <span style="background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 9999px; font-weight: 600; white-space: nowrap;">● Protected</span>
+                            <?php elseif ($site['status'] === 'PROTECTION_READY'): ?>
+                                <span style="background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 9999px; font-weight: 600; white-space: nowrap;">● Verified (Setup Pending)</span>
+                            <?php else: ?>
+                                <span style="background: rgba(234,179,8,0.15); color: #facc15; border: 1px solid rgba(234,179,8,0.3); font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 9999px; font-weight: 600; white-space: nowrap;">● Ownership Required</span>
+                            <?php endif; ?>
+                        </div>
+                        <p style="margin: 0; color: #64748b; font-size: 0.75rem; word-break: break-all;">Origin: <?= htmlspecialchars($site['origin_url']) ?></p>
+
+                        <?php if ($site['status'] === 'OWNERSHIP_REQUIRED'): ?>
+                            <div style="margin-top: 1rem; padding: 0.75rem; background: #0f172a; border-radius: 6px; border: 1px solid #1e293b; font-size: 0.75rem;">
+                                <div style="color: #cbd5e1; font-weight: 600; margin-bottom: 0.35rem;">Verify Ownership:</div>
+                                <div style="color: #94a3b8; line-height: 1.4;">Add a DNS <code>TXT</code> record to your domain root:</div>
+                                <div style="margin-top: 0.35rem; background: #050811; padding: 0.4rem; border-radius: 4px; font-family: monospace; color: #38bdf8; word-break: break-all;"><?= htmlspecialchars($site['verification_token']) ?></div>
+                                <div style="color: #64748b; margin-top: 0.35rem;">Or place a file at: <code>/.well-known/shieldlayer-verification.txt</code></div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <div style="margin-top: 1.25rem; padding-top: 0.75rem; border-top: 1px solid #1e293b; display: flex; justify-content: flex-end; gap: 0.5rem;">
+                        <?php if ($site['status'] === 'OWNERSHIP_REQUIRED'): ?>
+                            <form method="POST" action="/website/verify" style="margin: 0; width: 100%;">
+                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
+                                <input type="hidden" name="website_id" value="<?= htmlspecialchars($site['id']) ?>">
+                                <button type="submit" style="width: 100%; padding: 0.5rem; background: #eab308; color: #000; border: none; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">Verify Ownership Now</button>
+                            </form>
+                        <?php else: ?>
+                            <span style="font-size: 0.75rem; color: #4ade80; font-weight: 600;">Verified & Ready</span>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+</div>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
     <!-- Protection Mode Status -->
     <div style="background: #0f172a; border: 1px solid #1e293b; border-radius: 10px; padding: 1.25rem;">
