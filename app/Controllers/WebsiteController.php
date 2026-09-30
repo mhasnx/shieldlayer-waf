@@ -1,12 +1,11 @@
-﻿<?php
+<?php
 
 namespace ShieldLayer\Controllers;
-
-use ShieldLayer\Services\SecurityScannerService;
 
 use ShieldLayer\Core\Request;
 use ShieldLayer\Core\Response;
 use ShieldLayer\Repositories\WebsiteRepository;
+use ShieldLayer\Services\SecurityScannerService;
 use ShieldLayer\Middleware\CsrfMiddleware;
 use ShieldLayer\Support\Security;
 
@@ -42,12 +41,16 @@ class WebsiteController
         $parsed = parse_url($rawUrl);
         $domain = strtolower($parsed['host'] ?? '');
 
-        if (empty($domain) || !filter_var(gethostbyname($domain), FILTER_VALIDATE_IP)) {
-            // Safe fallback if DNS lookup fails temporarily
-            if (empty($domain)) {
-                $_SESSION['flash_error'] = 'Invalid domain structure.';
-                Response::redirect('/dashboard');
-            }
+        // Prevent public platforms like Facebook, YouTube, Google
+        $disallowedDomains = ['facebook.com', 'www.facebook.com', 'google.com', 'youtube.com', 'twitter.com', 'x.com', 'instagram.com', 'linkedin.com'];
+        if (in_array($domain, $disallowedDomains)) {
+            $_SESSION['flash_error'] = 'You can only add websites you own (e.g. your-company.com), not public social profiles.';
+            Response::redirect('/dashboard');
+        }
+
+        if (empty($domain)) {
+            $_SESSION['flash_error'] = 'Invalid domain structure.';
+            Response::redirect('/dashboard');
         }
 
         $this->websiteRepo->create($tenantId, $domain, $rawUrl);
@@ -83,7 +86,7 @@ class WebsiteController
             }
         }
 
-        // Method 2: Safe HTTP File verification fallback (/.well-known/shieldlayer-verification.txt)
+        // Method 2: Safe HTTP File verification fallback
         if (!$verified) {
             $checkUrl = "http://{$domain}/.well-known/shieldlayer-verification.txt";
             $ctx = stream_context_create(['http' => ['timeout' => 3, 'follow_location' => 1]]);
@@ -143,7 +146,6 @@ class WebsiteController
 
         $targetUrl = preg_match('#^https?://#i', $site['origin_url']) ? $site['origin_url'] : "https://{$site['domain']}";
 
-        // Send probe request with ShieldLayer Edge Token
         $ctx = stream_context_create([
             'http' => [
                 'method' => 'GET',
@@ -176,10 +178,9 @@ class WebsiteController
             $stmt->execute(['id' => $id]);
             $_SESSION['flash_success'] = "Traffic verified! ShieldLayer is now actively protecting {$site['domain']}.";
         } else {
-            // Non-breaking fallback: keep as PROTECTION_READY, do not falsify PROTECTED status
             $stmt = $db->prepare("UPDATE websites SET status = 'PROTECTION_READY' WHERE id = :id AND status != 'PROTECTED'");
             $stmt->execute(['id' => $id]);
-            $_SESSION['flash_error'] = "Traffic verification pending: ShieldLayer proxy header was not detected on {$site['domain']}. Review setup instructions below.";
+            $_SESSION['flash_error'] = "Traffic verification pending: ShieldLayer proxy header was not detected on {$site['domain']}.";
         }
 
         Response::redirect('/dashboard');
