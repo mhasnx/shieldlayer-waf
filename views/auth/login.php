@@ -1,6 +1,6 @@
 ﻿<?php
 use ShieldLayer\Support\Security;
-$token = $csrf_token ?? Security::csrfToken();
+$token = Security::csrfToken();
 $displayError = $error ?? $flash_error ?? null;
 $displaySuccess = $success ?? $flash_success ?? null;
 ?>
@@ -10,7 +10,7 @@ $displaySuccess = $success ?? $flash_success ?? null;
         <!-- Header -->
         <div style="text-align: center; margin-bottom: 2rem;">
             <div style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: rgba(2, 132, 199, 0.15); border: 1px solid rgba(2, 132, 199, 0.3); border-radius: 10px; margin-bottom: 1rem; font-size: 1.25rem;">
-                🛡️️
+                🛡️
             </div>
             <h1 style="margin: 0; font-size: 1.5rem; font-weight: 700; color: #f8fafc; letter-spacing: -0.025em;">Welcome to ShieldLayer</h1>
             <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: #94a3b8;">Protect and monitor your website from one place.</p>
@@ -33,6 +33,8 @@ $displaySuccess = $success ?? $flash_success ?? null;
 
         <!-- Form -->
         <form method="POST" action="/login" style="display: flex; flex-direction: column; gap: 1.25rem;">
+            <!-- CsrfMiddleware expects _csrf_token -->
+            <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($token) ?>">
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($token) ?>">
 
             <div>
@@ -44,7 +46,7 @@ $displaySuccess = $success ?? $flash_success ?? null;
                     required 
                     placeholder="name@company.com" 
                     value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
-                    style="width: 100%; box-sizing: border-box; background: #0b0f19; border: 1px solid #334155; border-radius: 6px; padding: 0.65rem 0.85rem; color: #f8fafc; font-size: 0.9rem; outline: none; transition: border-color 0.2s;"
+                    style="width: 100%; box-sizing: border-box; background: #0b0f19; border: 1px solid #334155; border-radius: 6px; padding: 0.65rem 0.85rem; color: #f8fafc; font-size: 0.9rem; outline: none;"
                 >
             </div>
 
@@ -73,9 +75,7 @@ $displaySuccess = $success ?? $flash_success ?? null;
 
             <button 
                 type="submit" 
-                style="width: 100%; background: #0284c7; color: #ffffff; border: none; border-radius: 6px; padding: 0.75rem; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 0.5rem;"
-                onmouseover="this.style.background='#0369a1'"
-                onmouseout="this.style.background='#0284c7'">
+                style="width: 100%; background: #0284c7; color: #ffffff; border: none; border-radius: 6px; padding: 0.75rem; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-top: 0.5rem;">
                 Sign In
             </button>
         </form>
