@@ -19,6 +19,7 @@ use ShieldLayer\Controllers\DashboardController;
 use ShieldLayer\Controllers\TenantController;
 use ShieldLayer\Controllers\WafController;
 use ShieldLayer\Controllers\TeamController;
+use ShieldLayer\Controllers\WebsiteController;
 
 Env::load(__DIR__ . '/../.env');
 \ShieldLayer\Core\Migrator::run();
@@ -63,5 +64,9 @@ $router->get('/waf/rule/delete', [WafController::class, 'delete']);
 // Team & RBAC Routes
 $router->post('/team/invite', [TeamController::class, 'invite']);
 $router->get('/team/remove', [TeamController::class, 'remove']);
+
+// Website Management & Verification Routes
+$router->post('/website/create', [WebsiteController::class, 'store']);
+$router->post('/website/verify', [WebsiteController::class, 'verify']);
 
 $router->dispatch($request);
