@@ -114,7 +114,7 @@
 
     <!-- Live Security Activity Table -->
     <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
-        <h3 style="font-size: 1.1rem; color: #38bdf8; margin-bottom: 1rem;">Live Security Activity (Recent Interceptions)</h3>
+        <h3 style="font-size: 1.1rem; color: #38bdf8; margin-bottom: 1rem;">Live Security Activity (Live Security Activity)</h3>
         
         <?php if (empty($security_events)): ?>
             <p style="color: var(--text-muted); font-size: 0.9rem;">No threat vectors detected. System operating securely under ShieldLayer WAF.</p>
@@ -294,3 +294,61 @@
         </div>
     </div>
 </div>
+
+<!-- Security Event Inspection Drawer -->
+<div id="eventDetailModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); backdrop-filter:blur(4px); z-index:99999; justify-content:center; align-items:center;">
+    <div style="background:#0f172a; border:1px solid #1e293b; border-radius:12px; max-width:600px; width:90%; padding:1.75rem; box-shadow:0 25px 50px -12px rgba(0,0,0,0.7); max-height:85vh; overflow-y:auto; color:#f8fafc;">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #1e293b; padding-bottom:0.75rem; margin-bottom:1rem;">
+            <div>
+                <h3 id="modalTitle" style="margin:0; font-size:1.15rem; color:#38bdf8; display:flex; align-items:center; gap:0.5rem;">
+                    <span>🛡️</span> Security Activity Details
+                </h3>
+                <small id="modalTime" style="color:#94a3b8; font-size:0.75rem;"></small>
+            </div>
+            <button onclick="document.getElementById('eventDetailModal').style.display='none'" style="background:transparent; border:none; color:#94a3b8; font-size:1.25rem; cursor:pointer;">✕</button>
+        </div>
+
+        <div style="margin-bottom:1.25rem;">
+            <div style="font-size:0.85rem; color:#cbd5e1; margin-bottom:0.35rem; font-weight:600;">What happened?</div>
+            <div id="modalSummary" style="background:#1e293b; padding:0.75rem; border-radius:8px; font-size:0.85rem; color:#e2e8f0; line-height:1.4;">
+                A suspicious pattern was intercepted and prevented from reaching your server.
+            </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1.25rem; font-size:0.8rem;">
+            <div style="background:#0b0f19; padding:0.6rem; border-radius:6px; border:1px solid #1e293b;">
+                <span style="color:#64748b; display:block;">Action Taken:</span>
+                <span id="modalAction" style="color:#4ade80; font-weight:600;">Blocked</span>
+            </div>
+            <div style="background:#0b0f19; padding:0.6rem; border-radius:6px; border:1px solid #1e293b;">
+                <span style="color:#64748b; display:block;">Target Path:</span>
+                <span id="modalPath" style="color:#38bdf8; font-family:monospace;">/</span>
+            </div>
+        </div>
+
+        <details style="margin-top:1rem; background:#0b0f19; border:1px solid #1e293b; border-radius:8px; padding:0.75rem;">
+            <summary style="color:#38bdf8; font-size:0.8rem; font-weight:600; cursor:pointer;">Technical Details & Evidence</summary>
+            <div style="margin-top:0.75rem; font-family:monospace; font-size:0.75rem; color:#cbd5e1; display:flex; flex-direction:column; gap:0.4rem;">
+                <div><strong style="color:#64748b;">Source IP:</strong> <span id="modalIp">127.0.0.1</span></div>
+                <div><strong style="color:#64748b;">HTTP Method:</strong> <span id="modalMethod">POST</span></div>
+                <div><strong style="color:#64748b;">Detection Engine:</strong> <span id="modalEngine">ShieldLayer Core WAF</span></div>
+                <div style="margin-top:0.35rem;"><strong style="color:#64748b;">Inspected Payload / Query:</strong></div>
+                <pre id="modalPayload" style="background:#050811; padding:0.5rem; border-radius:4px; overflow-x:auto; color:#f87171; margin:0.25rem 0 0 0;"></pre>
+            </div>
+        </details>
+    </div>
+</div>
+
+<script>
+function showSecurityDetail(title, time, summary, action, path, ip, method, payload) {
+    document.getElementById('modalTitle').innerText = title || 'Security Event';
+    document.getElementById('modalTime').innerText = time || '';
+    document.getElementById('modalSummary').innerText = summary || 'ShieldLayer examined the incoming request and applied traffic protection.';
+    document.getElementById('modalAction').innerText = action || 'Blocked';
+    document.getElementById('modalPath').innerText = path || '/';
+    document.getElementById('modalIp').innerText = ip || 'Protected';
+    document.getElementById('modalMethod').innerText = method || 'GET';
+    document.getElementById('modalPayload').innerText = payload || 'None / Cleared';
+    document.getElementById('eventDetailModal').style.display = 'flex';
+}
+</script>
