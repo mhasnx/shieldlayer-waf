@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace ShieldLayer\Repositories;
 
@@ -20,8 +20,8 @@ class WebsiteRepository
         $id = Security::generateUuid();
         $token = 'shieldlayer-verify-' . bin2hex(random_bytes(16));
         $stmt = $this->db->prepare("
-            INSERT INTO websites (id, tenant_id, domain, origin_url, status, verification_token)
-            VALUES (:id, :tenant_id, :domain, :origin_url, 'OWNERSHIP_REQUIRED', :token)
+            INSERT INTO websites (id, tenant_id, domain, origin_url, status, verification_token, created_at)
+            VALUES (:id, :tenant_id, :domain, :origin_url, 'OWNERSHIP_REQUIRED', :token, NOW())
         ");
         $stmt->execute([
             'id' => $id,
@@ -45,7 +45,7 @@ class WebsiteRepository
     {
         $stmt = $this->db->prepare("SELECT * FROM websites WHERE tenant_id = :tenant_id ORDER BY created_at DESC");
         $stmt->execute(['tenant_id' => $tenantId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 
     public function findById(string $id): ?array
