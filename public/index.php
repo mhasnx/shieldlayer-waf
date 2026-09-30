@@ -23,6 +23,20 @@ use ShieldLayer\Controllers\TeamController;
 Env::load(__DIR__ . '/../.env');
 Security::startSession();
 
+$request = new Request();
+
+// Resolve active tenant from session first (so WAF and RateLimiter know the tenant scope)
+$path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+$publicRoutes = ['/', '/login', '/register', '/logout'];
+
+if (!in_array($path, $publicRoutes)) {
+    TenantMiddleware::handle();
+}
+
+// Rate Limit & WAF protection with active tenant context
+RateLimitMiddleware::handle($request);
+WafMiddleware::handle($request);
+
 $router = new Router();
 
 // Auth Routes (Public)
@@ -35,7 +49,7 @@ $router->get('/logout', [AuthController::class, 'logout']);
 
 // Dashboard & Metrics
 $router->get('/dashboard', [DashboardController::class, 'index']);
-$router->get('/dashboard/export', [DashboardController::class, 'exportLogs']);
+$router->get('/dashboard/export', [DashboardController::class, 'exportTelemetry']);
 
 // Tenant Management
 $router->get('/tenant/switch', [TenantController::class, 'switchTenant']);
@@ -48,20 +62,5 @@ $router->get('/waf/rule/delete', [WafController::class, 'delete']);
 // Team & RBAC Routes
 $router->post('/team/invite', [TeamController::class, 'invite']);
 $router->get('/team/remove', [TeamController::class, 'remove']);
-
-// Lifecycle Execution
-$request = new Request();
-
-// Rate Limit & WAF protection on all requests
-RateLimitMiddleware::handle($request);
-WafMiddleware::handle($request);
-
-// Bypass TenantMiddleware for public auth routes
-$path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
-$publicRoutes = ['/', '/login', '/register', '/logout'];
-
-if (!in_array($path, $publicRoutes)) {
-    TenantMiddleware::handle();
-}
 
 $router->dispatch($request);
