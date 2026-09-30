@@ -1,64 +1,197 @@
+﻿<?php
+use ShieldLayer\Support\Security;
+Security::startSession();
+$isLoggedIn = !empty($_SESSION['user_id']);
+$userEmail = $_SESSION['user_email'] ?? 'Account';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($title ?? 'ShieldLayer') ?></title>
-    <style>
-        :root {
-            --bg-color: #0b0f19;
-            --surface-color: #111827;
-            --border-color: #1f2937;
-            --accent-color: #0284c7;
-            --accent-hover: #0369a1;
-            --text-main: #f9fafb;
-            --text-muted: #9ca3af;
-            --danger: #ef4444;
-            --success: #10b981;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
-        nav { background: var(--surface-color); border-bottom: 1px solid var(--border-color); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-weight: 700; font-size: 1.25rem; letter-spacing: 0.05em; color: #38bdf8; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
-        .nav-links a { color: var(--text-muted); text-decoration: none; margin-left: 1.5rem; font-size: 0.95rem; transition: color 0.2s; }
-        .nav-links a:hover { color: var(--text-main); }
-        .container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 2rem; }
-        .card { background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 2rem; width: 100%; max-width: 420px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); }
-        h1, h2 { margin-bottom: 1.5rem; font-size: 1.5rem; font-weight: 600; text-align: center; }
-        .form-group { margin-bottom: 1.25rem; }
-        label { display: block; font-size: 0.85rem; margin-bottom: 0.4rem; color: var(--text-muted); }
-        input[type="text"], input[type="email"], input[type="password"] {
-            width: 100%; background: #0b0f19; border: 1px solid var(--border-color); color: var(--text-main);
-            padding: 0.75rem 1rem; border-radius: 6px; font-size: 0.95rem; outline: none; transition: border-color 0.2s;
-        }
-        input:focus { border-color: var(--accent-color); }
-        button.btn {
-            width: 100%; background: var(--accent-color); color: #fff; border: none; padding: 0.75rem;
-            border-radius: 6px; font-size: 1rem; font-weight: 500; cursor: pointer; transition: background 0.2s;
-        }
-        button.btn:hover { background: var(--accent-hover); }
-        .alert { padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1.25rem; font-size: 0.9rem; }
-        .alert-danger { background: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger); color: #fca5a5; }
-        .alert-success { background: rgba(16, 185, 129, 0.15); border: 1px solid var(--success); color: #6ee7b7; }
-        .form-footer { margin-top: 1.5rem; text-align: center; font-size: 0.85rem; color: var(--text-muted); }
-        .form-footer a { color: #38bdf8; text-decoration: none; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><?= htmlspecialchars($title ?? 'ShieldLayer — Website Security & Protection') ?></title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #090d16;
+      color: #e2e8f0;
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; }
+    
+    /* Layout Framework */
+    .app-wrapper {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Sidebar */
+    .app-sidebar {
+      width: 250px;
+      background: #0f172a;
+      border-right: 1px solid #1e293b;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+    .brand-header {
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 1px solid #1e293b;
+    }
+    .brand-logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #38bdf8;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .nav-menu {
+      padding: 1.25rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      flex-grow: 1;
+    }
+    .nav-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.5rem 0.75rem 0.25rem;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      color: #94a3b8;
+      font-weight: 500;
+      transition: background 0.15s, color 0.15s;
+    }
+    .nav-item:hover, .nav-item.active {
+      background: #1e293b;
+      color: #38bdf8;
+    }
+    
+    /* Main Area */
+    .app-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .top-navbar {
+      height: 60px;
+      background: #0f172a;
+      border-bottom: 1px solid #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.75rem;
+    }
+    .main-body {
+      flex: 1;
+      padding: 1.75rem;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Auth Clean Container (Non-Logged in) */
+    .auth-wrapper {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: #0b0f19;
+      padding: 1rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .app-wrapper { flex-direction: column; }
+      .app-sidebar { width: 100%; border-right: none; border-bottom: 1px solid #1e293b; }
+      .main-body { padding: 1rem; }
+    }
+  </style>
 </head>
 <body>
-    <nav>
-        <a href="/" class="logo">🛡️ ShieldLayer</a>
-        <div class="nav-links">
-            <?php if (!empty($_SESSION['user_id'])): ?>
-                <a href="/dashboard">Dashboard</a>
-                <a href="/logout">Logout</a>
-            <?php else: ?>
-                <a href="/login">Sign In</a>
-                <a href="/register">Register</a>
-            <?php endif; ?>
+
+<?php if ($isLoggedIn): ?>
+  <div class="app-wrapper">
+    <!-- Sidebar -->
+    <aside class="app-sidebar">
+      <div class="brand-header">
+        <a href="/dashboard" class="brand-logo">
+          <span>🛡️</span> ShieldLayer
+        </a>
+      </div>
+      <nav class="nav-menu">
+        <span class="nav-label">Security Command</span>
+        <a href="/dashboard" class="nav-item active">
+          <span>📊</span> Overview
+        </a>
+        <a href="#traffic-protection" class="nav-item">
+          <span>🛡️</span> Website Protection
+        </a>
+        <a href="#live-activity" class="nav-item">
+          <span>⚡</span> Live Activity
+        </a>
+
+        <span class="nav-label" style="margin-top: 1rem;">Workspace</span>
+        <a href="#team-members" class="nav-item">
+          <span>👥</span> Team Members
+        </a>
+        <a href="#organization-settings" class="nav-item">
+          <span>⚙️</span> Organization Settings
+        </a>
+      </nav>
+
+      <div style="padding: 1rem; border-top: 1px solid #1e293b; font-size: 0.8rem; color: #64748b;">
+        <div style="color: #cbd5e1; font-weight: 600;"><?= htmlspecialchars($userEmail) ?></div>
+        <div style="color: #10b981; font-size: 0.75rem; margin-top: 0.15rem;">● System Online</div>
+      </div>
+    </aside>
+
+    <!-- Main Container -->
+    <div class="app-main">
+      <header class="top-navbar">
+        <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.875rem;">
+          <span style="color: #64748b;">Active Workspace:</span>
+          <span style="background: #1e293b; padding: 0.25rem 0.65rem; border-radius: 6px; font-weight: 600; color: #38bdf8; border: 1px solid #334155;">
+            Default Organization
+          </span>
         </div>
-    </nav>
-    <main class="container">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <a href="/logout" style="background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); padding: 0.35rem 0.75rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600;">
+            Sign Out
+          </a>
+        </div>
+      </header>
+
+      <main class="main-body">
         <?= $content ?>
-    </main>
+      </main>
+    </div>
+  </div>
+
+<?php else: ?>
+  <!-- Public / Auth Screens -->
+  <div class="auth-wrapper">
+    <?= $content ?>
+  </div>
+<?php endif; ?>
+
 </body>
 </html>
