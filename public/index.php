@@ -21,6 +21,7 @@ use ShieldLayer\Controllers\WafController;
 use ShieldLayer\Controllers\TeamController;
 
 Env::load(__DIR__ . '/../.env');
+\ShieldLayer\Core\Migrator::run();
 Security::startSession();
 
 $request = new Request();
