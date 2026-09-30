@@ -1,4 +1,4 @@
-<div style="width: 100%; max-width: 1000px; margin: 0 auto;">
+﻿<div style="width: 100%; max-width: 1000px; margin: 0 auto;">
     <?php if (!empty($flash_success)): ?>
         <div class="alert alert-success"><?= htmlspecialchars($flash_success) ?></div>
     <?php endif; ?>
@@ -9,6 +9,46 @@
     <!-- Scope Header -->
     <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         <div>
+    <!-- Quick Integration & Connect Website Guide -->
+    <div style="background: #0f172a; border: 1px solid #0284c7; border-radius: 10px; padding: 1.25rem; margin-bottom: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.75rem;">
+            <div>
+                <h3 style="margin: 0; color: #38bdf8; font-size: 1.15rem; font-weight: 700;">🛡️ Connect Your Website to ShieldLayer WAF</h3>
+                <p style="margin: 0.25rem 0 0 0; color: #94a3b8; font-size: 0.85rem;">Protect your external web applications against SQLi, XSS, and LFI attacks in real time.</p>
+            </div>
+            <span style="background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid #22c55e; font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 9999px; font-weight: 600;">ACTIVE GATEWAY</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+            <!-- Step 1 -->
+            <div style="background: #1e293b; border-radius: 8px; padding: 1rem;">
+                <div style="color: #cbd5e1; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.5rem;">Step 1: Your Tenant ID / Key</div>
+                <div style="background: #0b0f19; border: 1px solid #334155; padding: 0.5rem; border-radius: 4px; font-family: monospace; font-size: 0.8rem; color: #38bdf8; word-break: break-all;">
+                    <?= htmlspecialchars($current_tenant['id'] ?? 'N/A') ?>
+                </div>
+                <small style="color: #64748b; display: block; margin-top: 0.4rem;">Use this identifier to bind incoming requests to your dashboard.</small>
+            </div>
+
+            <!-- Step 2 -->
+            <div style="background: #1e293b; border-radius: 8px; padding: 1rem;">
+                <div style="color: #cbd5e1; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.5rem;">Step 2: 1-Line PHP Guard (Your Site)</div>
+                <pre style="background: #0b0f19; border: 1px solid #334155; padding: 0.5rem; border-radius: 4px; font-family: monospace; font-size: 0.75rem; color: #a5f3fc; margin: 0; overflow-x: auto;">
+file_get_contents("https://shieldlayer-waf.onrender.com/dashboard?" . http_build_query($_REQUEST));</pre>
+                <small style="color: #64748b; display: block; margin-top: 0.4rem;">Add this line to your website's main index.php file.</small>
+            </div>
+
+            <!-- Step 3 -->
+            <div style="background: #1e293b; border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <div style="color: #cbd5e1; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.5rem;">Step 3: Test Protection</div>
+                    <small style="color: #94a3b8; display: block; margin-bottom: 0.75rem;">Simulate an attack vector to verify that threat telemetry is actively logging.</small>
+                </div>
+                <a href="/dashboard?test_payload=1'+UNION+SELECT+null,username,password+FROM+users--" target="_blank" style="text-align: center; background: #0284c7; color: #fff; text-decoration: none; padding: 0.5rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600;">
+                    Simulate Test Attack ⚡
+                </a>
+            </div>
+        </div>
+    </div>
             <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Current Tenant Scope</div>
             <div style="font-size: 1.3rem; font-weight: 700; color: #38bdf8;">
                 <?= htmlspecialchars($current_tenant['name'] ?? 'No Organization Selected') ?>
