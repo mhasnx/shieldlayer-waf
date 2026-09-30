@@ -53,7 +53,16 @@
                                 <button type="submit" style="width: 100%; padding: 0.5rem; background: #eab308; color: #000; border: none; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">Verify Ownership Now</button>
                             </form>
                         <?php else: ?>
-                            <span style="font-size: 0.75rem; color: #4ade80; font-weight: 600;">Verified & Ready</span>
+                            <div style="display: flex; gap: 0.5rem; align-items: center; width: 100%;">
+    <span style="font-size: 0.75rem; color: #4ade80; font-weight: 600; margin-right: auto;">● Verified</span>
+    <form method="POST" action="/website/scan" style="margin: 0;">
+        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
+        <input type="hidden" name="website_id" value="<?= htmlspecialchars($site['id']) ?>">
+        <button type="submit" style="padding: 0.45rem 0.85rem; background: #0284c7; color: #fff; border: none; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
+            🔍 Scan Now
+        </button>
+    </form>
+</div>
                         <?php endif; ?>
                     </div>
                 </div>
