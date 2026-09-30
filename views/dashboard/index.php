@@ -76,7 +76,7 @@
             </div>
             <div>
                 <div style="font-weight: 600; font-size: 1.05rem;">Website Security Score: <?= (int)$health_status['score'] ?>/100</div>
-                <div style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">All core security primitives, strict session guards, and DoS mitigators active.</div>
+                <div style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">Core server primitives and baseline runtime posture monitored by ShieldLayer.</div>
             </div>
         </div>
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
@@ -91,23 +91,23 @@
     <!-- Threat Breakdown Matrix -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
         <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; text-align: center;">
-            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">TOTAL INTERCEPTIONS</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">BLOCKED REQUESTS</div>
             <div style="font-size: 1.5rem; font-weight: 700; color: #ef4444; margin-top: 0.25rem;"><?= (int) $total_threats ?></div>
         </div>
         <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; text-align: center;">
-            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">SQL INJECTIONS</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">SQL INJECTIONS ATTEMPTED</div>
             <div style="font-size: 1.5rem; font-weight: 700; color: #f87171; margin-top: 0.25rem;"><?= (int) ($threat_metrics['SQL_INJECTION'] ?? 0) ?></div>
         </div>
         <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; text-align: center;">
-            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">XSS VECTORS</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">XSS ATTEMPTS</div>
             <div style="font-size: 1.5rem; font-weight: 700; color: #fbbf24; margin-top: 0.25rem;"><?= (int) ($threat_metrics['CROSS_SITE_SCRIPTING'] ?? 0) ?></div>
         </div>
         <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; text-align: center;">
-            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">IP BLACKLISTED</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">BLOCKED IPS</div>
             <div style="font-size: 1.5rem; font-weight: 700; color: #a78bfa; margin-top: 0.25rem;"><?= (int) ($threat_metrics['IP_BLACKLISTED'] ?? 0) ?></div>
         </div>
         <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; text-align: center;">
-            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">RATE THROTTLED</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">RATE-LIMITED REQUESTS</div>
             <div style="font-size: 1.5rem; font-weight: 700; color: #38bdf8; margin-top: 0.25rem;"><?= (int) ($threat_metrics['RATE_LIMIT_EXCEEDED'] ?? 0) ?></div>
         </div>
     </div>
