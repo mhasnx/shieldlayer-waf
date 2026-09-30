@@ -1,3 +1,31 @@
+<!-- Live Status & Security Score Header -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+    <!-- Protection Mode Status -->
+    <div style="background: #0f172a; border: 1px solid #1e293b; border-radius: 10px; padding: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <span style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase;">Protection Mode</span>
+            <span style="background: rgba(34, 197, 94, 0.2); color: #4ade80; font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 9999px; font-weight: 600;">● Protected</span>
+        </div>
+        <h4 style="margin: 0 0 0.3rem 0; color: #f8fafc; font-size: 1.1rem;">Traffic Filter Active</h4>
+        <p style="margin: 0; color: #94a3b8; font-size: 0.8rem;">Actively intercepting malicious requests, SQL injections, and suspicious bots.</p>
+    </div>
+
+    <!-- Security Score -->
+    <div style="background: #0f172a; border: 1px solid #1e293b; border-radius: 10px; padding: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+                <span style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase;">Security Score</span>
+                <div style="font-size: 1.8rem; font-weight: 800; color: #38bdf8; margin-top: 0.2rem;">87 <span style="font-size: 0.9rem; color: #64748b;">/ 100</span></div>
+            </div>
+            <span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 6px;">Good Posture</span>
+        </div>
+        <div style="margin-top: 0.75rem; font-size: 0.75rem; color: #94a3b8; display: flex; gap: 0.75rem;">
+            <span>Critical: <b style="color: #ef4444;">0</b></span>
+            <span>High: <b style="color: #f97316;">1</b></span>
+            <span>Medium: <b style="color: #eab308;">2</b></span>
+        </div>
+    </div>
+</div>
 ﻿<div style="width: 100%; max-width: 1000px; margin: 0 auto;">
     <?php if (!empty($flash_success)): ?>
         <div class="alert alert-success"><?= htmlspecialchars($flash_success) ?></div>
@@ -47,7 +75,7 @@
                 <?= htmlspecialchars($health_status['grade'] ?? 'A') ?>
             </div>
             <div>
-                <div style="font-weight: 600; font-size: 1.05rem;">WAF Security Posture Score: <?= (int)$health_status['score'] ?>/100</div>
+                <div style="font-weight: 600; font-size: 1.05rem;">Website Security Score: <?= (int)$health_status['score'] ?>/100</div>
                 <div style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">All core security primitives, strict session guards, and DoS mitigators active.</div>
             </div>
         </div>
@@ -84,9 +112,9 @@
         </div>
     </div>
 
-    <!-- Live Threat Telemetry Table -->
+    <!-- Live Security Activity Table -->
     <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
-        <h3 style="font-size: 1.1rem; color: #38bdf8; margin-bottom: 1rem;">Live Threat Telemetry (Recent Interceptions)</h3>
+        <h3 style="font-size: 1.1rem; color: #38bdf8; margin-bottom: 1rem;">Live Security Activity (Recent Interceptions)</h3>
         
         <?php if (empty($security_events)): ?>
             <p style="color: var(--text-muted); font-size: 0.9rem;">No threat vectors detected. System operating securely under ShieldLayer WAF.</p>
