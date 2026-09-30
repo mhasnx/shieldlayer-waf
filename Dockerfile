@@ -1,9 +1,11 @@
 FROM php:8.2-apache
 
-# Install required system tools & unzip for composer
+# Install required system tools, unzip & CA certificates for SSL
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
+    ca-certificates \
+    && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PDO MySQL & rewrite module
@@ -21,7 +23,7 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 COPY . /var/www/html/
 WORKDIR /var/www/html
 
-# Install PHP dependencies & ensure storage directory
+# Install dependencies & set storage permissions
 RUN composer install --no-interaction --no-dev --optimize-autoloader \
     && mkdir -p /var/www/html/storage/logs \
     && chown -R www-data:www-data /var/www/html/storage
