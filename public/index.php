@@ -2,6 +2,11 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// Handle Render HTTPS reverse proxy
+if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
+    $_SERVER['HTTPS'] = 'on';
+}
+
 use ShieldLayer\Support\Env;
 use ShieldLayer\Support\Security;
 use ShieldLayer\Core\Request;
@@ -20,7 +25,7 @@ Security::startSession();
 
 $router = new Router();
 
-// Auth Routes
+// Auth Routes (Public)
 $router->get('/', [AuthController::class, 'showLogin']);
 $router->get('/login', [AuthController::class, 'showLogin']);
 $router->post('/login', [AuthController::class, 'handleLogin']);
@@ -28,11 +33,13 @@ $router->get('/register', [AuthController::class, 'showRegister']);
 $router->post('/register', [AuthController::class, 'handleRegister']);
 $router->get('/logout', [AuthController::class, 'logout']);
 
-// Tenant & Dashboard Routes
+// Dashboard & Metrics
 $router->get('/dashboard', [DashboardController::class, 'index']);
-$router->get('/dashboard/export', [DashboardController::class, 'exportTelemetry']);
-$router->post('/tenant/create', [TenantController::class, 'store']);
+$router->get('/dashboard/export', [DashboardController::class, 'exportLogs']);
+
+// Tenant Management
 $router->get('/tenant/switch', [TenantController::class, 'switchTenant']);
+$router->post('/tenant/create', [TenantController::class, 'store']);
 
 // WAF Rules Routes
 $router->post('/waf/rule/create', [WafController::class, 'store']);
@@ -45,8 +52,16 @@ $router->get('/team/remove', [TeamController::class, 'remove']);
 // Lifecycle Execution
 $request = new Request();
 
-TenantMiddleware::handle();
+// Rate Limit & WAF protection on all requests
 RateLimitMiddleware::handle($request);
 WafMiddleware::handle($request);
+
+// Bypass TenantMiddleware for public auth routes
+$path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+$publicRoutes = ['/', '/login', '/register', '/logout'];
+
+if (!in_array($path, $publicRoutes)) {
+    TenantMiddleware::handle();
+}
 
 $router->dispatch($request);
