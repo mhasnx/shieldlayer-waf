@@ -10,14 +10,25 @@ class CsrfMiddleware
 {
     public static function handle(Request $request): void
     {
-        if ($request->getMethod() === 'POST') {
-            $token = $request->input('_csrf_token') ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? null;
-            if (!Security::validateCsrfToken($token)) {
-                Response::json([
-                    'error' => true,
-                    'message' => 'CSRF Token Validation Failed. Request Terminated.'
-                ], 403);
-            }
+        Security::startSession();
+
+        if (in_array(strtoupper($request->getMethod()), ['GET', 'HEAD', 'OPTIONS'])) {
+            return;
+        }
+
+        $token = $request->input('csrf_token') 
+            ?? $_POST['csrf_token'] 
+            ?? $_SERVER['HTTP_X_CSRF_TOKEN'] 
+            ?? null;
+
+        $sessionToken = $_SESSION['csrf_token'] ?? null;
+
+        if (!$token || !$sessionToken || !hash_equals($sessionToken, $token)) {
+            Response::json([
+                'error' => true,
+                'message' => 'CSRF Token Validation Failed. Request Terminated.'
+            ], 403);
+            exit;
         }
     }
 }

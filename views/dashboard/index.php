@@ -1,3 +1,4 @@
+<?php if (empty($_SESSION["csrf_token"])) { $_SESSION["csrf_token"] = bin2hex(random_bytes(32)); } ?>
 <!-- Live Status & Security Score Header -->
 <!-- Websites & Ownership Verification Section (Mobile Responsive) -->
 <div style="background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);">
