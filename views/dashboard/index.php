@@ -206,7 +206,7 @@
                 </tbody>
             </table>
         <?php else: ?>
-            <p style="color: var(--text-muted); font-size: 0.85rem;">No active tenant-level rules deployed yet.</p>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">No active traffic rules added yet.</p>
         <?php endif; ?>
     </div>
 
@@ -219,7 +219,7 @@
                 <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
 
                 <div style="flex: 2; min-width: 200px;">
-                    <input type="email" name="email" placeholder="Registered operator work email..." required style="width: 100%; background: #0b0f19; border: 1px solid var(--border-color); color: var(--text-main); padding: 0.65rem 1rem; border-radius: 6px; outline: none;">
+                    <input type="email" name="email" placeholder="Team member email address..." required style="width: 100%; background: #0b0f19; border: 1px solid var(--border-color); color: var(--text-main); padding: 0.65rem 1rem; border-radius: 6px; outline: none;">
                 </div>
 
                 <div style="flex: 1; min-width: 130px;">
@@ -237,7 +237,7 @@
         <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
             <thead>
                 <tr style="border-bottom: 1px solid var(--border-color); text-align: left; color: var(--text-muted);">
-                    <th style="padding: 0.6rem;">Operator</th>
+                    <th style="padding: 0.6rem;">Team Member</th>
                     <th style="padding: 0.6rem;">Email</th>
                     <th style="padding: 0.6rem;">Access Level</th>
                     <?php if ($tenant_role === 'owner'): ?>
@@ -289,7 +289,7 @@
                     <label for="org_name">Organization Name</label>
                     <input type="text" id="org_name" name="org_name" placeholder="e.g. Acme Cyber Defense" required>
                 </div>
-                <button type="submit" class="btn" style="padding: 0.6rem;">Deploy Organization</button>
+                <button type="submit" class="btn" style="padding: 0.6rem;">Create Organization</button>
             </form>
         </div>
     </div>
