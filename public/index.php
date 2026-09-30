@@ -80,5 +80,6 @@ $router->get('/team/remove', [TeamController::class, 'remove']);
 $router->post('/website/create', [WebsiteController::class, 'store']);
 $router->post('/website/verify', [WebsiteController::class, 'verify']);
 $router->post('/website/scan', [WebsiteController::class, 'triggerScan']);
+$router->post('/website/verify-traffic', [WebsiteController::class, 'verifyTraffic']);
 
 $router->dispatch($request);

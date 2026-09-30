@@ -127,4 +127,61 @@ class WebsiteController
 
         Response::redirect('/dashboard');
     }
+
+    public function verifyTraffic(Request $request): void
+    {
+        CsrfMiddleware::handle($request);
+        Security::startSession();
+
+        $id = $request->input('website_id', '');
+        $site = $this->websiteRepo->findById($id);
+
+        if (!$site) {
+            $_SESSION['flash_error'] = 'Website not found.';
+            Response::redirect('/dashboard');
+        }
+
+        $targetUrl = preg_match('#^https?://#i', $site['origin_url']) ? $site['origin_url'] : "https://{$site['domain']}";
+
+        // Send probe request with ShieldLayer Edge Token
+        $ctx = stream_context_create([
+            'http' => [
+                'method' => 'GET',
+                'timeout' => 5,
+                'ignore_errors' => true,
+                'header' => [
+                    "X-ShieldLayer-Probe: true",
+                    "X-ShieldLayer-Token: {$site['verification_token']}"
+                ]
+            ],
+            'ssl' => ['verify_peer' => false, 'verify_peer_name' => false]
+        ]);
+
+        $resHeaders = @get_headers($targetUrl, true, $ctx);
+        $trafficPassing = false;
+
+        if ($resHeaders) {
+            foreach ($resHeaders as $k => $v) {
+                if (strtolower($k) === 'x-shieldlayer-active' || strtolower($k) === 'cf-ray' || strtolower($k) === 'x-forwarded-by-shieldlayer') {
+                    $trafficPassing = true;
+                    break;
+                }
+            }
+        }
+
+        $db = \ShieldLayer\Core\Database::getConnection();
+
+        if ($trafficPassing) {
+            $stmt = $db->prepare("UPDATE websites SET status = 'PROTECTED', traffic_verified_at = NOW() WHERE id = :id");
+            $stmt->execute(['id' => $id]);
+            $_SESSION['flash_success'] = "Traffic verified! ShieldLayer is now actively protecting {$site['domain']}.";
+        } else {
+            // Non-breaking fallback: keep as PROTECTION_READY, do not falsify PROTECTED status
+            $stmt = $db->prepare("UPDATE websites SET status = 'PROTECTION_READY' WHERE id = :id AND status != 'PROTECTED'");
+            $stmt->execute(['id' => $id]);
+            $_SESSION['flash_error'] = "Traffic verification pending: ShieldLayer proxy header was not detected on {$site['domain']}. Review setup instructions below.";
+        }
+
+        Response::redirect('/dashboard');
+    }
 }

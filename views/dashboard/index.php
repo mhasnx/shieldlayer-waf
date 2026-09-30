@@ -62,6 +62,17 @@
             🔍 Scan Now
         </button>
     </form>
+    <?php if ($site['status'] === 'PROTECTION_READY'): ?>
+        <form method="POST" action="/website/verify-traffic" style="margin: 0;">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
+            <input type="hidden" name="website_id" value="<?= htmlspecialchars($site['id']) ?>">
+            <button type="submit" style="padding: 0.45rem 0.85rem; background: #16a34a; color: #fff; border: none; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
+                ⚡ Connect Protection
+            </button>
+        </form>
+    <?php endif; ?>
+        </button>
+    </form>
 </div>
                         <?php endif; ?>
                     </div>
