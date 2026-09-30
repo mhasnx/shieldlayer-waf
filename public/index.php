@@ -22,7 +22,18 @@ use ShieldLayer\Controllers\TeamController;
 use ShieldLayer\Controllers\WebsiteController;
 
 Env::load(__DIR__ . '/../.env');
-\ShieldLayer\Core\Migrator::run();
+
+// Auto-run schema migration safely
+try {
+    $dbInstance = \ShieldLayer\Core\Database::getConnection();
+    $sqlFile = __DIR__ . '/../database/migrations/2026_09_30_add_websites_and_scanner_tables.sql';
+    if (file_exists($sqlFile)) {
+        $dbInstance->exec(file_get_contents($sqlFile));
+    }
+} catch (\Throwable $e) {
+    error_log("Schema sync notice: " . $e->getMessage());
+}
+
 Security::startSession();
 
 $request = new Request();
