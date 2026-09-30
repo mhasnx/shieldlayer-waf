@@ -1,4 +1,4 @@
-<div style="width: 100%; max-width: 1000px; margin: 0 auto;">
+﻿<div style="width: 100%; max-width: 1000px; margin: 0 auto;">
     <?php if (!empty($flash_success)): ?>
         <div class="alert alert-success"><?= htmlspecialchars($flash_success) ?></div>
     <?php endif; ?>
